@@ -1,5 +1,53 @@
 <div class="row">
   <div class="col-12">
-    <div bar-chart [data]="data"></div>   
+    <div *ngIf="data" class="col-8">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Score</th>
+            <th>Sentence</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{{data.score}}</td>
+            <td>{{data.sentence}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div *ngIf="azureData">
+      <table class="table table-bordered">
+        <thead>
+          <th>Service Provider Name</th>
+          <th>Positive Score</th>
+          <th>Neutral Score</th>
+          <th>Negative Score</th>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Human</td>
+            <td>{{humanPositiveScore}}</td>
+            <td>0</td>
+            <td>{{humanNegativeScore}}</td>
+          </tr>
+          <tr>
+            <td>Open Source (NLTK)</td>
+            <td>{{openSourceScore.data.pos}}</td>
+            <td>{{openSourceScore.data.neu}}</td>
+            <td>{{openSourceScore.data.neg}}</td>
+          </tr>
+          <tr>
+              <td>Mircosoft Azure</td>
+              <td>{{azurePositiveScore}}</td>
+              <td>0</td>
+              <td>{{azureNegativeScore}}</td>
+            </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div bar-chart [data]="data"></div>
   </div>
 </div>

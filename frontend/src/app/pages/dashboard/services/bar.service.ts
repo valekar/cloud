@@ -7,6 +7,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
 import { Observable } from 'rxjs/Observable';
+import {Sentence} from '../../models/sentiment';
 @Injectable()
 export class BarService {
 
@@ -18,5 +19,16 @@ export class BarService {
     .catch((err:Response)=> {return Observable.throw(err.json())});
   }
 
+  getNLTKScore(str:Sentence){
+    return this.http.post(URLS.GET_NLTK_SCORE_URL,str,this.commonService.getHeaderOptions())
+    .map((res:Response)=>{return res.json()})
+    .catch((err:Response)=> {return Observable.throw(err.json())});
+  }
+
+  getAzureScore(str:Sentence){
+    return this.http.post(URLS.GET_AZURE_SCORE_URL,str,this.commonService.getHeaderOptions())
+    .map((res:Response)=> {return  res.json()})
+    .catch((err:Response)=> {return Observable.throw(err.json())})
+  }
 
 }
