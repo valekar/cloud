@@ -17,7 +17,7 @@
       </table>
     </div>
 
-    <div *ngIf="azureData">
+    <div *ngIf="watsonData">
       <table class="table table-bordered">
         <thead>
           <th>Service Provider Name</th>
@@ -39,11 +39,17 @@
             <td>{{openSourceScore.data.neg}}</td>
           </tr>
           <tr>
-              <td>Mircosoft Azure</td>
-              <td>{{azurePositiveScore}}</td>
-              <td>0</td>
-              <td>{{azureNegativeScore}}</td>
-            </tr>
+            <td>Mircosoft Azure</td>
+            <td>{{azurePositiveScore}}</td>
+            <td>0</td>
+            <td>{{azureNegativeScore}}</td>
+          </tr>
+          <tr>
+            <td>IBM Watson</td>
+            <td>{{watsonPositiveScore}}</td>
+            <td>{{watsonNeutralScore}}</td>
+            <td>{{watsonNegativeScore}}</td>
+          </tr>
         </tbody>
       </table>
     </div>

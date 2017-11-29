@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BarService } from '../../services/bar.service';
-import { OpenSourceCode, Sentence,Azure } from '../../../models/sentiment';
+import { OpenSourceCode, Sentence,Azure,Watson } from '../../../models/sentiment';
 
 @Component({
   selector: 'simple-bar-chart',
@@ -16,6 +16,10 @@ export class SimpleBarChartComponent implements OnInit {
   azureData:Azure;
   azurePositiveScore=0;
   azureNegativeScore = 0;
+  watsonData:Watson;
+  watsonPositiveScore=0;
+  watsonNegativeScore=0;
+  watsonNeutralScore = 0;
   constructor(private barService: BarService) { }
 
   ngOnInit() {
@@ -35,9 +39,11 @@ export class SimpleBarChartComponent implements OnInit {
       this.data = res;
       let sentence: Sentence = new Sentence();
       sentence.sentence = this.data.sentence;
+      //NLTK response
       this.barService.getNLTKScore(sentence).subscribe((res: OpenSourceCode) => {
         //console.log(res.data);
         this.openSourceScore = res;
+        //azure request
         this.barService.getAzureScore(sentence).subscribe((res: Azure) => {
           console.log(res.data);
           this.azureData = res;
@@ -48,8 +54,25 @@ export class SimpleBarChartComponent implements OnInit {
             this.azurePositiveScore = 1
           }
 
-        })
+          this.barService.getWatsonScore(sentence).subscribe((res:Watson)=> {
+            this.watsonData = res;
+            console.log(this.watsonData);
+            if(this.watsonData.data.sentiment.document.label == "positive"){
+              this.watsonPositiveScore = this.watsonData.data.sentiment.document.score;
+            }
+            else if(this.watsonData.data.sentiment.document.label == "neutral"){
+              this.watsonNeutralScore = this.watsonData.data.sentiment.document.score;
+            }
+            else if(this.watsonData.data.sentiment.document.label == "negative"){
+              this.watsonNegativeScore = this.watsonData.data.sentiment.document.score;
+            }
+          })
+
+
+        });
+        //end of Azure response
       });
+      // end of NLTK response
     });
   }
 

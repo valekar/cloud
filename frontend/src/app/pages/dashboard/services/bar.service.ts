@@ -31,4 +31,13 @@ export class BarService {
     .catch((err:Response)=> {return Observable.throw(err.json())})
   }
 
+
+  getWatsonScore(str:Sentence){
+    return this.http.post(URLS.GET_WATSON_SCORE_URL,str,this.commonService.getHeaderOptions())
+    .map((res:Response)=> {return  res.json()})
+    .catch((err:Response)=> {return Observable.throw(err.json())})
+  }
+
+
+
 }

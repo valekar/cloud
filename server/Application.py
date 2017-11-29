@@ -1,7 +1,6 @@
 import json
 from flask import Flask, request, jsonify
 from flask_restful import Resource, Api
-from sqlalchemy import create_engine
 from nltk.classify import NaiveBayesClassifier
 from nltk.corpus import subjectivity
 from nltk.sentiment import SentimentAnalyzer
@@ -43,11 +42,19 @@ class MicrosoftMeta(Resource):
         result = microsoft.getScore(sentence)
         return {'data': result}
 
+class WatsonMeta(Resource):
+    def post(self):
+        watson = Watson()
+        json_data = request.get_json(force=True)
+        sentence = json_data["sentence"]
+        result = watson.getScore(sentence)
+        return {'data': result}
+
 
 api.add_resource(NLTKMeta, '/api/opensource/score/')
 api.add_resource(MicrosoftMeta, '/api/azure/score/')
+api.add_resource(WatsonMeta, '/api/watson/score/')
 api.add_resource(RandmMeta, '/api/random/sentence/')
-
 
 
 
@@ -70,6 +77,21 @@ class Microsoft(object):
         r = requests.post(self.url, headers=self.headers, data=json.dumps(self.data))
         return r.json()
 
+
+
+
+
+#IBM BLuemix
+class Watson(object):
+    url = "https://gateway.watsonplatform.net/natural-language-understanding/api/v1/analyze?version=2017-02-27&text=I%20still%20have%20a%20dream%2C%20a%20dream%20deeply%20rooted%20in%20the%20American%20dream%20%E2%80%93%20one%20day%20this%20nation%20will%20rise%20up%20and%20live%20up%20to%20its%20creed%2C%20%22We%20hold%20these%20truths%20to%20be%20self%20evident%3A%20that%20all%20men%20are%20created%20equal.&features=sentiment"
+    headers = {'Authorization':"Basic MjJmMzQ2M2YtYThhZC00MGE1LTk0NzAtMmFlZDc3ZTcxNjdiOkFHS244S3I1Rmhmdw==",
+               'Content-type':'application/json'}
+    data = {"text":""}
+
+    def getScore(self,sentence):
+        self.data["text"] = sentence
+        r = requests.post(self.url, headers=self.headers, data=json.dumps(self.data))
+        return r.json()
 
 
 if __name__ == '__main__':
