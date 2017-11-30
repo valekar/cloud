@@ -8,12 +8,15 @@ from nltk.sentiment.util import *
 import nltk
 import requests
 
-nltk.download('vader_lexicon')
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
-
+nltk.data.path.append('./nltk_data/')
 app = Flask(__name__)
 api = Api(app)
 sid = SentimentIntensityAnalyzer()
+
+@app.route('/')
+def index():
+	return 'Yo, it\'s working!'
 
 
 class RandmMeta(Resource):
