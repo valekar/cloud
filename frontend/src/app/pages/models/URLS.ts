@@ -3,4 +3,5 @@ export class URLS{
     public static GET_NLTK_SCORE_URL = "/api/opensource/score/";
     public static GET_AZURE_SCORE_URL = "/api/azure/score/";
     public static GET_WATSON_SCORE_URL = "/api/watson/score/";
+    public static GET_GOOGLE_SCORE_URL = "/api/google/score/";
 }

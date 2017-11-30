@@ -42,6 +42,7 @@ class MicrosoftMeta(Resource):
         result = microsoft.getScore(sentence)
         return {'data': result}
 
+
 class WatsonMeta(Resource):
     def post(self):
         watson = Watson()
@@ -51,26 +52,39 @@ class WatsonMeta(Resource):
         return {'data': result}
 
 
+class GoogleMeta(Resource):
+    def post(self):
+        google = Google()
+        json_data = request.get_json(force=True)
+        sentence = json_data["sentence"]
+        result = google.getScore(sentence)
+        return {'data': result}
+
+
 api.add_resource(NLTKMeta, '/api/opensource/score/')
 api.add_resource(MicrosoftMeta, '/api/azure/score/')
 api.add_resource(WatsonMeta, '/api/watson/score/')
+api.add_resource(GoogleMeta, '/api/google/score/')
 api.add_resource(RandmMeta, '/api/random/sentence/')
 
 
+class Google(object):
+    url = "https://language.googleapis.com/v1/documents:analyzeEntitySentiment?key=AIzSyBwpMG6Z0BKMnxKhSjFmPcVBz1ga_HIl6w"
+    headers = {"Content-Type": "application/json"}
+    data = {"document": {"type": "PLAIN_TEXT", "content": ""}, "encodingType": "UTF8"}
+
+    def getScore(self, sentence):
+        self.data["document"]["content"] = sentence
+        r = requests.post(self.url, headers=self.headers, data=json.dumps(self.data))
+        return r.json()
 
 
-
-
-
-
-#vendors
+# vendors
 class Microsoft(object):
     url = "https://westcentralus.api.cognitive.microsoft.com/text/analytics/v2.0/sentiment"
     headers = {'Ocp-Apim-Subscription-Key': '4f3d38b315c74e578e5a70777c0c92ad',
                'Content-Type': 'application/json'}
     data = {"documents": [{"id": "1", "text": ""}]}
-
-
 
     def getScore(self, sentence):
         self.data['documents'][0]["text"] = sentence
@@ -78,17 +92,14 @@ class Microsoft(object):
         return r.json()
 
 
-
-
-
-#IBM BLuemix
+# IBM BLuemix
 class Watson(object):
     url = "https://gateway.watsonplatform.net/natural-language-understanding/api/v1/analyze?version=2017-02-27&text=I%20still%20have%20a%20dream%2C%20a%20dream%20deeply%20rooted%20in%20the%20American%20dream%20%E2%80%93%20one%20day%20this%20nation%20will%20rise%20up%20and%20live%20up%20to%20its%20creed%2C%20%22We%20hold%20these%20truths%20to%20be%20self%20evident%3A%20that%20all%20men%20are%20created%20equal.&features=sentiment"
-    headers = {'Authorization':"Basic MjJmMzQ2M2YtYThhZC00MGE1LTk0NzAtMmFlZDc3ZTcxNjdiOkFHS244S3I1Rmhmdw==",
-               'Content-type':'application/json'}
-    data = {"text":""}
+    headers = {'Authorization': "Basic MjJmMzQ2M2YtYThhZC00MGE1LTk0NzAtMmFlZDc3ZTcxNjdiOkFHS244S3I1Rmhmdw==",
+               'Content-type': 'application/json'}
+    data = {"text": ""}
 
-    def getScore(self,sentence):
+    def getScore(self, sentence):
         self.data["text"] = sentence
         r = requests.post(self.url, headers=self.headers, data=json.dumps(self.data))
         return r.json()
@@ -96,4 +107,3 @@ class Watson(object):
 
 if __name__ == '__main__':
     app.run()
-

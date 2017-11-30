@@ -39,5 +39,11 @@ export class BarService {
   }
 
 
+  getGoogleScore(str:Sentence){
+    return this.http.post(URLS.GET_GOOGLE_SCORE_URL,str,this.commonService.getHeaderOptions())
+    .map((res:Response)=> {return  res.json()})
+    .catch((err:Response)=> {return Observable.throw(err.json())})
+  }
+
 
 }

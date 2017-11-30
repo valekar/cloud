@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BarService } from '../../services/bar.service';
-import { OpenSourceCode, Sentence,Azure,Watson } from '../../../models/sentiment';
+import { OpenSourceCode, Sentence,Azure,Watson,Google } from '../../../models/sentiment';
 
 @Component({
   selector: 'simple-bar-chart',
@@ -20,6 +20,10 @@ export class SimpleBarChartComponent implements OnInit {
   watsonPositiveScore=0;
   watsonNegativeScore=0;
   watsonNeutralScore = 0;
+  googleData:Google;
+  googlePositiveScore:number = 0;
+  googleNegativeScore:number = 0;
+  googleNeutralScore:number = 0;
   constructor(private barService: BarService) { }
 
   ngOnInit() {
@@ -53,21 +57,39 @@ export class SimpleBarChartComponent implements OnInit {
           else{
             this.azurePositiveScore = 1
           }
-
+          //watson
           this.barService.getWatsonScore(sentence).subscribe((res:Watson)=> {
             this.watsonData = res;
             console.log(this.watsonData);
             if(this.watsonData.data.sentiment.document.label == "positive"){
-              this.watsonPositiveScore = this.watsonData.data.sentiment.document.score;
+             // this.watsonPositiveScore = this.watsonData.data.sentiment.document.score;
+              this.watsonPositiveScore = 1;
             }
             else if(this.watsonData.data.sentiment.document.label == "neutral"){
-              this.watsonNeutralScore = this.watsonData.data.sentiment.document.score;
+              //this.watsonNeutralScore = this.watsonData.data.sentiment.document.score;
+              this.watsonNeutralScore = 1;
             }
             else if(this.watsonData.data.sentiment.document.label == "negative"){
-              this.watsonNegativeScore = this.watsonData.data.sentiment.document.score;
+              //this.watsonNegativeScore = this.watsonData.data.sentiment.document.score;
+              this.watsonNegativeScore = 1;
             }
-          })
 
+            //google
+            this.barService.getGoogleScore(sentence).subscribe((res:Google)=>{
+              this.googleData = res;
+              if(this.googleData.data.entities[0].sentiment.score < -0.25){
+                this.googleNegativeScore = 1;
+              }
+              else  if(this.googleData.data.entities[0].sentiment.score > 0.25){
+                this.googlePositiveScore = 1;
+              }
+              else {
+                this.googleNeutralScore = 1;
+              }
+            })  
+
+          });
+          // end of watson
 
         });
         //end of Azure response

@@ -39,3 +39,38 @@ export class Watson {
         }
     }
 }
+
+
+export class Google{
+    data:{
+        entities: Array<
+            {
+                name: string;
+                type: string;
+                metadata: {
+                    mid: string;
+                    wikipedia_url: string;
+                },
+                salience: number;
+                mentions: Array<
+                    {
+                        text: {
+                            content:string
+                            beginOffset: string;
+                        },
+                        type: string;
+                        sentiment: {
+                            magnitude: number;
+                            score: number;
+                        }
+                    }
+                >;
+                sentiment: {
+                    magnitude:number;
+                    score: number;
+                }
+            }
+        >;
+        language: string
+    }
+}
